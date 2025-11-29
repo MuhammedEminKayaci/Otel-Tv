@@ -53,10 +53,13 @@ body {
   background: linear-gradient(135deg, #111111, #2b2b2b);
   color: #ffffff;
   border-radius: 12px;
-  padding: 6px 14px;          /* Daha sıkı padding */
+  padding: 10px 16px;         /* Daha dengeli padding */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center;     /* dikey ortalama */
+  align-items: center;         /* yatay ortalama */
+  text-align: center;
+  gap: 6px;
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.8); /* siyah gölge */
 }
 
@@ -88,10 +91,11 @@ body {
 }
 
 .logo-image {
-  max-height: 60%;            /* ÖNCEKİ 70 → 60, TAŞMAYI ÖNLER */
+  max-height: 45%;            /* Smart TV'de taşmayı önle - daha küçük */
   height: auto;
   width: auto;
   object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
 }
 
 /* Sağ: tarih / saat */
@@ -156,12 +160,14 @@ body {
   font-size: 1.2em;
   letter-spacing: 4px;
   margin-bottom: 4px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8); /* siyah gölge, modern */
 }
 
 .world-time-digits {
   font-family: "Share Tech Mono", "Consolas", "Courier New", monospace;
   font-size: 1.7em;
   letter-spacing: 4px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.85);
 }
 
 /* ORTA: VİDEO ALANI */
