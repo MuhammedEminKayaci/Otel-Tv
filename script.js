@@ -11,46 +11,19 @@ if (!window.console) {
 }
 
 // -------------------------
-// TV ALGILAMA
+// TV ALGILAMA (sadece font için)
 // -------------------------
-var IS_TV = false;
-
 function detectTV() {
   var ua = navigator.userAgent || "";
-  IS_TV =
+  var isTV =
     /TV|SmartTV|Tizen|WebTV|WebOS|NetCast|NetTV|HbbTV|VIDAA|Hisense|PhilipsTV|Opera TV|Vewd/i.test(
       ua
     ) || screen.width >= 2500;
 
-  if (IS_TV) {
+  if (isTV) {
     document.body.className += " tv-view";
   }
 }
-
-// -------------------------
-// SABİT FRAME SCALE
-// -------------------------
-function resizeFrame() {
-  var app = document.getElementById("tv-app");
-  if (!app) return;
-
-  var sw = window.innerWidth || document.documentElement.clientWidth;
-  var sh = window.innerHeight || document.documentElement.clientHeight;
-
-  var scaleX = sw / 1920;
-  var scaleY = sh / 1080;
-  var scale = scaleX < scaleY ? scaleX : scaleY;
-
-  // overscan ve TV üstündeki URL bar vs. için biraz küçült
-  scale = scale * 0.9;
-
-  app.style.transform =
-    "translate(-50%, -50%) scale(" + scale + ")";
-}
-
-window.addEventListener("resize", function () {
-  resizeFrame();
-});
 
 // -------------------------
 // TARİH / SAAT
@@ -129,18 +102,15 @@ function xhrGetJson(url, onSuccess, onError) {
             var data = JSON.parse(xhr.responseText);
             onSuccess(data);
           } catch (e) {
-            console.error("JSON parse hatası:", e);
             if (onError) onError(e);
           }
         } else {
-          console.error("XHR HTTP hata:", xhr.status);
           if (onError) onError(xhr);
         }
       }
     };
     xhr.send(null);
   } catch (e) {
-    console.error("XHR çalışmadı:", e);
     if (onError) onError(e);
   }
 }
@@ -186,10 +156,8 @@ function fetchWeather() {
   xhrGetJson(
     url,
     function (data) {
-      if (!data || !data.current_weather) {
-        console.error("Hava verisi yok");
-        return;
-      }
+      if (!data || !data.current_weather) return;
+
       var cw = data.current_weather;
       var temp = typeof cw.temperature === "number" ? cw.temperature : null;
       var code = cw.weathercode;
@@ -209,7 +177,6 @@ function fetchWeather() {
       }
     },
     function () {
-      console.error("Hava durumu alınamadı");
       var descEl = document.getElementById("weather-desc");
       if (descEl) descEl.innerHTML = "Bağlantı yok";
     }
@@ -228,6 +195,17 @@ var currencyTargets = {
   GBP: { id: "rate-gbp", symbol: "£" }
 };
 
+// TV internete çıkamasa bile ekranda sayı olsun diye sabit fallback
+function setStaticFallbackRates() {
+  var el;
+  el = document.getElementById("rate-jpy"); if (el) el.innerHTML = "0.27¥";
+  el = document.getElementById("rate-usd"); if (el) el.innerHTML = "42.50$";
+  el = document.getElementById("rate-eur"); if (el) el.innerHTML = "49.28€";
+  el = document.getElementById("rate-chf"); if (el) el.innerHTML = "52.85Fr";
+  el = document.getElementById("rate-rub"); if (el) el.innerHTML = "0.54₽";
+  el = document.getElementById("rate-gbp"); if (el) el.innerHTML = "50.90£";
+}
+
 function setRatesFromTryBase(rates) {
   for (var code in currencyTargets) {
     if (!currencyTargets.hasOwnProperty(code)) continue;
@@ -240,33 +218,9 @@ function setRatesFromTryBase(rates) {
       el.innerHTML = "--";
       continue;
     }
-
     var tlPerUnit = 1 / r;
     el.innerHTML = tlPerUnit.toFixed(2) + cfg.symbol;
   }
-}
-
-// TV API'lere çıkamazsa bile ekranda değer görünsün diye sabit fallback
-function setStaticFallbackRates() {
-  var el;
-
-  el = document.getElementById("rate-jpy");
-  if (el) el.innerHTML = "0.27¥";
-
-  el = document.getElementById("rate-usd");
-  if (el) el.innerHTML = "42.50$";
-
-  el = document.getElementById("rate-eur");
-  if (el) el.innerHTML = "49.28€";
-
-  el = document.getElementById("rate-chf");
-  if (el) el.innerHTML = "52.85Fr";
-
-  el = document.getElementById("rate-rub");
-  if (el) el.innerHTML = "0.54₽";
-
-  el = document.getElementById("rate-gbp");
-  if (el) el.innerHTML = "50.90£";
 }
 
 function fetchRatesPrimary(onDone) {
@@ -278,12 +232,10 @@ function fetchRatesPrimary(onDone) {
         setRatesFromTryBase(data.rates);
         if (onDone) onDone(true);
       } else {
-        console.error("Rates data invalid");
         if (onDone) onDone(false);
       }
     },
     function () {
-      console.error("Rates primary API hata");
       if (onDone) onDone(false);
     }
   );
@@ -298,12 +250,10 @@ function fetchRatesFallback(onDone) {
         setRatesFromTryBase(data.rates);
         if (onDone) onDone(true);
       } else {
-        console.error("Rates fallback data invalid");
         if (onDone) onDone(false);
       }
     },
     function () {
-      console.error("Rates fallback API hata");
       if (onDone) onDone(false);
     }
   );
@@ -314,7 +264,7 @@ function fetchRates() {
     if (!ok) {
       fetchRatesFallback(function (ok2) {
         if (!ok2) {
-          // hem primary hem fallback çalışmazsa sabit değerleri yaz
+          // İkisi de çalışmazsa sabit değerleri yaz
           setStaticFallbackRates();
         }
       });
@@ -332,19 +282,16 @@ function ensureVideoPlays() {
   try {
     video.muted = true;
     video.setAttribute("playsinline", "");
-
     var playPromise = video.play && video.play();
     if (playPromise && playPromise.catch) {
       playPromise.catch(function () {
         setTimeout(ensureVideoPlays, 3000);
       });
     }
-  } catch (e) {
-    console.error("Video oynatılamadı:", e);
-  }
+  } catch (e) {}
 }
 
-// Uzaktan kumanda ok tuşları sayfayı kaydırmasın
+// Ok tuşları sayfayı kaydırmasın
 document.addEventListener("keydown", function (e) {
   var keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "PageUp", "PageDown"];
   for (var i = 0; i < keys.length; i++) {
@@ -355,9 +302,7 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
-// -------------------------
-// 24 SAATTE OTOMATİK YENİLE
-// -------------------------
+// 24 saatte bir yenile
 function scheduleAutoReload() {
   var ONE_DAY_MS = 24 * 60 * 60 * 1000;
   setTimeout(function () {
@@ -370,12 +315,11 @@ function scheduleAutoReload() {
 // -------------------------
 document.addEventListener("DOMContentLoaded", function () {
   detectTV();
-  resizeFrame();
 
   updateLocalDateTime();
   updateWorldClocks();
   fetchWeather();
-  fetchRates();
+  fetchRates();          // çalışmazsa bile fallback yazar
   ensureVideoPlays();
   scheduleAutoReload();
 
