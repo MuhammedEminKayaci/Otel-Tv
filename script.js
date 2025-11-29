@@ -1,8 +1,7 @@
-// ----------------------------------------------------
-// ESKİ SMART TV TARAYICILARI İÇİN UYUMLU SCRIPT
-// ----------------------------------------------------
+// ==========================
+// ESKİ TV UYUMLU SCRIPT
+// ==========================
 
-// Eski tarayıcılarda console yoksa hata vermesin
 if (!window.console) {
   window.console = {
     log: function () {},
@@ -11,47 +10,59 @@ if (!window.console) {
   };
 }
 
-// -----------------------------
+// -------------------------
 // TV ALGILAMA
-// -----------------------------
+// -------------------------
+var IS_TV = false;
+
 function detectTV() {
   var ua = navigator.userAgent || "";
-  var isTV =
+  IS_TV =
     /TV|SmartTV|Tizen|WebTV|WebOS|NetCast|NetTV|HbbTV|VIDAA|Hisense|PhilipsTV|Opera TV|Vewd/i.test(
       ua
-    ) || screen.width >= 2500; // büyük ekran algısı
+    ) || screen.width >= 2500;
 
-  if (isTV) {
+  if (IS_TV) {
     document.body.className += " tv-view";
   }
 }
 
-// -----------------------------
-// ZAMAN / TARİH (Intl KULLANMADAN)
-// -----------------------------
+// -------------------------
+// SABİT FRAME SCALE
+// -------------------------
+function resizeFrame() {
+  var app = document.getElementById("tv-app");
+  if (!app) return;
+
+  var sw = window.innerWidth || document.documentElement.clientWidth;
+  var sh = window.innerHeight || document.documentElement.clientHeight;
+
+  var scaleX = sw / 1920;
+  var scaleY = sh / 1080;
+  var scale = scaleX < scaleY ? scaleX : scaleY;
+
+  // overscan ve TV üstündeki URL bar vs. için biraz küçült
+  scale = scale * 0.9;
+
+  app.style.transform =
+    "translate(-50%, -50%) scale(" + scale + ")";
+}
+
+window.addEventListener("resize", function () {
+  resizeFrame();
+});
+
+// -------------------------
+// TARİH / SAAT
+// -------------------------
 var MONTH_NAMES_TR = [
-  "Ocak",
-  "Şubat",
-  "Mart",
-  "Nisan",
-  "Mayıs",
-  "Haziran",
-  "Temmuz",
-  "Ağustos",
-  "Eylül",
-  "Ekim",
-  "Kasım",
-  "Aralık"
+  "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+  "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
 ];
 
 var DAY_NAMES_TR = [
-  "Pazar",
-  "Pazartesi",
-  "Salı",
-  "Çarşamba",
-  "Perşembe",
-  "Cuma",
-  "Cumartesi"
+  "Pazar", "Pazartesi", "Salı", "Çarşamba",
+  "Perşembe", "Cuma", "Cumartesi"
 ];
 
 function pad2(n) {
@@ -60,7 +71,6 @@ function pad2(n) {
 
 function updateLocalDateTime() {
   var now = new Date();
-
   var day = now.getDate();
   var month = now.getMonth();
   var year = now.getFullYear();
@@ -83,34 +93,31 @@ function updateLocalDateTime() {
   if (timeEl) timeEl.innerHTML = timeStr;
 }
 
-// Dünya saatleri – UTC üstünden manuel hesap
+// Dünya saatleri (yaklaşık)
 function formatHM(dateObj) {
   return pad2(dateObj.getHours()) + ":" + pad2(dateObj.getMinutes());
 }
 
 function updateWorldClocks() {
   var now = new Date();
-
-  // Lokal zamanı UTC'ye çevir
   var utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
 
-  // Saat farkları (yaklaşık)
   var london = new Date(utcMs + 0 * 3600000);   // UTC
   var newyork = new Date(utcMs - 5 * 3600000);  // UTC-5
-  var tokyo = new Date(utcMs + 9 * 3600000);    // UTC+9
+  var tokyo  = new Date(utcMs + 9 * 3600000);   // UTC+9
 
   var elLon = document.getElementById("time-london");
-  var elNy = document.getElementById("time-ny");
-  var elTk = document.getElementById("time-tokyo");
+  var elNy  = document.getElementById("time-ny");
+  var elTk  = document.getElementById("time-tokyo");
 
   if (elLon) elLon.innerHTML = formatHM(london);
-  if (elNy) elNy.innerHTML = formatHM(newyork);
-  if (elTk) elTk.innerHTML = formatHM(tokyo);
+  if (elNy)  elNy.innerHTML  = formatHM(newyork);
+  if (elTk)  elTk.innerHTML  = formatHM(tokyo);
 }
 
-// -----------------------------
-// BASİT XHR YARDIMCI FONKSİYON
-// -----------------------------
+// -------------------------
+// XHR JSON YARDIMCI
+// -------------------------
 function xhrGetJson(url, onSuccess, onError) {
   try {
     var xhr = new XMLHttpRequest();
@@ -138,9 +145,9 @@ function xhrGetJson(url, onSuccess, onError) {
   }
 }
 
-// -----------------------------
-// HAVA DURUMU (Open-Meteo, API KEY gerekmez)
-// -----------------------------
+// -------------------------
+// HAVA DURUMU
+// -------------------------
 var KARS_LAT = 40.601;
 var KARS_LON = 43.097;
 
@@ -209,9 +216,9 @@ function fetchWeather() {
   );
 }
 
-// -----------------------------
+// -------------------------
 // DÖVİZ KURLARI
-// -----------------------------
+// -------------------------
 var currencyTargets = {
   JPY: { id: "rate-jpy", symbol: "¥" },
   USD: { id: "rate-usd", symbol: "$" },
@@ -234,10 +241,32 @@ function setRatesFromTryBase(rates) {
       continue;
     }
 
-    // 1 TRY = r CODE -> 1 CODE = 1/r TRY
     var tlPerUnit = 1 / r;
     el.innerHTML = tlPerUnit.toFixed(2) + cfg.symbol;
   }
+}
+
+// TV API'lere çıkamazsa bile ekranda değer görünsün diye sabit fallback
+function setStaticFallbackRates() {
+  var el;
+
+  el = document.getElementById("rate-jpy");
+  if (el) el.innerHTML = "0.27¥";
+
+  el = document.getElementById("rate-usd");
+  if (el) el.innerHTML = "42.50$";
+
+  el = document.getElementById("rate-eur");
+  if (el) el.innerHTML = "49.28€";
+
+  el = document.getElementById("rate-chf");
+  if (el) el.innerHTML = "52.85Fr";
+
+  el = document.getElementById("rate-rub");
+  if (el) el.innerHTML = "0.54₽";
+
+  el = document.getElementById("rate-gbp");
+  if (el) el.innerHTML = "50.90£";
 }
 
 function fetchRatesPrimary(onDone) {
@@ -281,27 +310,21 @@ function fetchRatesFallback(onDone) {
 }
 
 function fetchRates() {
-  // Önce birincil API, olmazsa fallback
   fetchRatesPrimary(function (ok) {
     if (!ok) {
       fetchRatesFallback(function (ok2) {
         if (!ok2) {
-          // Tamamen başarısızsa ekranda '--' göster
-          for (var code in currencyTargets) {
-            if (!currencyTargets.hasOwnProperty(code)) continue;
-            var cfg = currencyTargets[code];
-            var el = document.getElementById(cfg.id);
-            if (el) el.innerHTML = "--";
-          }
+          // hem primary hem fallback çalışmazsa sabit değerleri yaz
+          setStaticFallbackRates();
         }
       });
     }
   });
 }
 
-// -----------------------------
+// -------------------------
 // VIDEO AUTOPLAY
-// -----------------------------
+// -------------------------
 function ensureVideoPlays() {
   var video = document.getElementById("hotel-video");
   if (!video) return;
@@ -332,9 +355,9 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
-// -----------------------------
+// -------------------------
 // 24 SAATTE OTOMATİK YENİLE
-// -----------------------------
+// -------------------------
 function scheduleAutoReload() {
   var ONE_DAY_MS = 24 * 60 * 60 * 1000;
   setTimeout(function () {
@@ -342,11 +365,12 @@ function scheduleAutoReload() {
   }, ONE_DAY_MS);
 }
 
-// -----------------------------
+// -------------------------
 // INIT
-// -----------------------------
+// -------------------------
 document.addEventListener("DOMContentLoaded", function () {
   detectTV();
+  resizeFrame();
 
   updateLocalDateTime();
   updateWorldClocks();

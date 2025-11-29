@@ -6,7 +6,6 @@
   --accent-gold: #ffc93c;
 }
 
-/* GENEL */
 html,
 body {
   margin: 0;
@@ -15,34 +14,39 @@ body {
   height: 100%;
   background: #000;
   overflow: hidden;
+  font-family: "Times New Roman", Times, serif;
+  color: var(--text-main);
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  color: var(--text-main);
-  font-family: "Times New Roman", Times, serif;
+/* 1920x1080 sabit alan */
+#tv-app {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: center center;
+  /* ilk yüklemede hafif küçültme (overscan için) */
+  transform: translate(-50%, -50%) scale(0.9);
+  background: #000;
+  overflow: hidden;
 }
 
-/* ANA YAPI – EKRANI KAPLA */
+/* İç layout – 1920x1080 içinde çalışıyoruz */
 .layout {
-  width: 100vw;
-  height: 100vh;
+  width: 1920px;
+  height: 1080px;
   display: flex;
   flex-direction: column;
-  background-color: #000;
 }
 
-/* TV overscan'ı için çok hafif güvenlik boşluğu */
-.tv-safe-area {
-  padding: 1vh 1.5vw;
-}
-
-/* ÜST ŞERİT */
+/* ÜST ŞERİT (yükseklik: 180px) */
 .top-bar {
-  flex: 0 0 13vh;
+  flex: 0 0 180px;
   background: linear-gradient(
     90deg,
     var(--yellow-main),
@@ -50,200 +54,172 @@ body {
     var(--yellow-main)
   );
   color: #2b1700;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
-  padding: 1vh 2vw;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
+  padding: 20px 40px;
 
-  display: grid;
-  grid-template-columns: minmax(14vw, 18vw) 1fr minmax(18vw, 22vw);
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 }
 
-/* Sol: Hava durumu kartı */
+/* Sol: hava durumu kartı */
 .weather-panel {
-  background: rgba(0, 0, 0, 0.82);
+  width: 320px;
+  height: 140px;
+  background: #111;
   color: #fff;
-  border-radius: 0.6rem;
-  padding: 1vh 1.5vw;
+  border-radius: 12px;
+  padding: 12px 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.45);
-  max-width: 18vw;
-  width: 100%;
+  align-items: flex-start;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
 }
 
 .weather-city {
-  font-size: clamp(1.3rem, 1.8vw, 2.2rem);
+  font-size: 26px;
   font-weight: 600;
 }
 
 .weather-temp {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
-    system-ui, sans-serif;
-  font-size: clamp(2.6rem, 3.5vw, 4rem);
-  font-weight: 600;
-  margin-top: 0.4vh;
-  letter-spacing: 0.02em;
+  font-size: 46px;
+  font-weight: 700;
+  margin-top: 4px;
 }
 
 .weather-desc {
-  margin-top: 0.4vh;
-  font-size: clamp(1.1rem, 1.5vw, 1.9rem);
+  font-size: 20px;
+  margin-top: 4px;
 }
 
-/* Orta logo */
+/* Orta: logo */
 .logo-panel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.logo-icon {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .logo-image {
-  max-height: 20vh;
+  max-height: 140px;
   height: auto;
   width: auto;
   object-fit: contain;
 }
 
-/* Sağ: Tarih / Gün / Saat */
+/* Sağ: tarih/saat */
 .datetime-panel {
+  width: 320px;
+  text-align: right;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  text-align: right;
-  color: #2b1700;
-  padding-right: 1vw;
 }
 
 .datetime-date {
-  font-size: clamp(1.5rem, 1.9vw, 2.4rem);
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: 0.02em;
 }
 
 .datetime-day {
-  font-size: clamp(1.3rem, 1.7vw, 2.1rem);
-  margin-top: 0.3vh;
-  font-weight: 600;
-  letter-spacing: 0.03em;
+  font-size: 22px;
+  margin-top: 4px;
 }
 
 .datetime-time {
-  font-size: clamp(2.3rem, 3vw, 3.6rem);
-  margin-top: 0.8vh;
+  font-size: 32px;
+  margin-top: 8px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
 }
 
-/* ORTA ALAN */
+/* ORTA ALAN (yükseklik: 720px) */
 .center-area {
   flex: 1;
-
-  /* Eski tarayıcılar için FLEX fallback */
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
   flex-direction: row;
-
-  /* Grid destekleyenler için gerçek layout */
-  display: grid;
-  grid-template-columns: minmax(15vw, 18vw) 1fr minmax(20vw, 23vw);
   background-color: var(--bg-dark);
 }
 
-/* SOL: Dünya saatleri */
+/* Sol sütun: dünya saatleri (260px) */
 .world-times {
-  background:
-    radial-gradient(circle at 0 0, rgba(255, 215, 0, 0.25), transparent 55%),
-    radial-gradient(circle at 100% 100%, rgba(255, 215, 0, 0.18), transparent 60%),
-    #000;
-  padding: 4vh 1.8vw;
+  width: 260px;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background: radial-gradient(circle at 0 0, rgba(255, 215, 0, 0.2), transparent 55%),
+              #000;
 }
 
 .world-block {
-  text-align: center;
-  padding: 2vh 0 2.4vh;
-  border-radius: 0.8rem;
-  background: radial-gradient(
-      circle at 50% 0,
-      rgba(255, 215, 0, 0.18),
-      transparent 55%
-    ),
-    rgba(0, 0, 0, 0.7);
-  box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(255, 215, 0, 0.35);
+  height: 180px;
+  border-radius: 12px;
+  background: #111;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .world-times-title {
-  letter-spacing: 0.16em;
-  font-size: clamp(1.4rem, 2vw, 2.2rem);
-  margin-bottom: 1vh;
-  text-shadow: 0 0 12px rgba(0, 0, 0, 0.85);
+  font-size: 22px;
+  letter-spacing: 6px;
+  margin-bottom: 6px;
 }
 
 .world-time-digits {
   font-family: "Share Tech Mono", "Consolas", "Courier New", monospace;
-  font-size: clamp(2.6rem, 3.4vw, 3.8rem);
-  letter-spacing: 0.18em;
-  text-shadow: 0 0 14px rgba(0, 0, 0, 0.95);
+  font-size: 32px;
+  letter-spacing: 6px;
 }
 
-/* ORTA: Video alanı */
+/* Orta sütun: video */
 .video-wrapper {
-  position: relative;
-  padding: 1vh 0.5vw;
+  flex: 1;
+  padding: 30px 20px;
   display: flex;
-  align-items: stretch;
-  justify-content: stretch;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-player {
   width: 100%;
   height: 100%;
+  border-radius: 10px;
   object-fit: cover;
-  border-radius: 0.6rem;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
 }
 
-/* SAĞ: Oda fiyatları */
+/* Sağ sütun: oda fiyatları (360px) */
 .room-prices {
-  background:
-    radial-gradient(circle at 0 0, rgba(255, 215, 0, 0.3), transparent 60%),
-    radial-gradient(circle at 100% 100%, rgba(255, 215, 0, 0.22), transparent 60%),
-    #000;
+  width: 360px;
   display: flex;
   flex-direction: column;
+  background: radial-gradient(circle at 100% 0, rgba(255, 215, 0, 0.25), transparent 60%),
+              #000;
 }
 
 .room-header {
-  background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%), var(--yellow-main);
+  height: 120px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent 40%),
+              var(--yellow-main);
   color: #1f1300;
   text-align: center;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  padding: 2vh 1vw;
-  font-size: clamp(1.6rem, 2vw, 2.3rem);
-  box-shadow: 0 -12px 22px rgba(0,0,0,0.55) inset, 0 2px 8px rgba(0,0,0,0.2);
+  letter-spacing: 6px;
+  padding-top: 20px;
+  font-size: 22px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .room-list {
   flex: 1;
-  padding: 4vh 2.5vw;
+  padding: 30px 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -251,10 +227,10 @@ body {
 
 .room-row {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  font-size: clamp(1.7rem, 2.1vw, 2.4rem);
-  color: #fff;
+  font-size: 22px;
 }
 
 .room-row .price {
@@ -262,22 +238,24 @@ body {
   font-weight: 700;
 }
 
-/* ALT DÖVİZ ŞERİDİ */
+/* ALT DÖVİZ ŞERİDİ (yükseklik ~ 120px) */
 .rates-bar {
-  flex: 0 0 9vh;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  flex: 0 0 120px;
   background-color: var(--yellow-main);
   border-top: 2px solid #1c1200;
+
+  display: flex;
+  flex-direction: row;
 }
 
 .rate-item {
+  flex: 1;
   border-left: 1px solid rgba(0, 0, 0, 0.25);
-  padding: 0.8vh 0.8vw;
+  padding: 12px 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .rate-item:first-child {
@@ -286,24 +264,17 @@ body {
 
 .rate-name {
   font-weight: 700;
-  font-size: clamp(1.4rem, 1.7vw, 2rem);
+  font-size: 20px;
   color: #000;
 }
 
 .rate-value {
-  margin-top: 0.4vh;
-  font-size: clamp(1.4rem, 1.8vw, 2.1rem);
+  margin-top: 4px;
+  font-size: 20px;
   color: #000;
 }
 
-/* Büyük ekranlar için hafif font ayarı */
-@media (min-width: 2500px) {
-  body {
-    font-size: 18px;
-  }
-}
-
-/* tv-view: sadece font büyütebiliriz, scale yok */
+/* TV modunda biraz daha iri yazı istersen */
 .tv-view {
-  font-size: 20px;
+  font-size: 18px;
 }
