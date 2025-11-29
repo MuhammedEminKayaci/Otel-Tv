@@ -211,7 +211,7 @@ body {
 .room-header {
   height: 22%;
   /* Hafif siyahtan sarıya geçiş */
-  background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, #f6c600 55%, #e5b800 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, #f6c600 55%, #e5b800 100%);
   color: #1f1300;
   text-align: center;
   font-weight: 700;

@@ -255,7 +255,7 @@ function updateRate(code, id, rates, customSymbol) {
     case "USD": symbol = "$"; break;
     case "EUR": symbol = "€"; break;
     case "CHF": symbol = "Fr"; break;
-    case "RUB": symbol = customSymbol || rubleSymbol; break;
+    case "RUB": symbol = "₽"; break;
     case "GBP": symbol = "£"; break;
     default: symbol = code;
   }
