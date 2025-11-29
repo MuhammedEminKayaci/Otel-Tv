@@ -1,7 +1,24 @@
 // -----------------------------
+// 1920x1080 CANVAS'I EKRANA GÖRE ÖLÇEKLE
+// -----------------------------
+function resizeLayout() {
+  const designW = 1920;
+  const designH = 1080;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  const scale = Math.min(w / designW, h / designH);
+  const layout = document.querySelector(".layout");
+  if (!layout) return;
+
+  layout.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener("resize", resizeLayout);
+
+// -----------------------------
 // ZAMAN / TARİH
 // -----------------------------
-
 function updateLocalDateTime() {
   const now = new Date();
 
@@ -54,9 +71,8 @@ function updateWorldClocks() {
 }
 
 // -----------------------------
-// HAVA DURUMU (Open-Meteo, API KEY yok)
+// HAVA DURUMU (Open-Meteo, API KEY gerekmez)
 // -----------------------------
-
 const KARS_LAT = 40.601;
 const KARS_LON = 43.097;
 
@@ -122,7 +138,7 @@ async function fetchWeather() {
 
 // -----------------------------
 // DÖVİZ KURLARI
-// 1 BİRİM yabancı para = X TL (sayı), ama ekranda kendi sembolü gösterilir
+// 1 BİRİM yabancı para = X TL (rakam), ekranda kendi sembolü ile
 // -----------------------------
 
 const currencyTargets = {
@@ -134,7 +150,6 @@ const currencyTargets = {
   GBP: { id: "rate-gbp", symbol: "£" },
 };
 
-// TRY bazlı oranlardan 1 CODE = ? TL hesaplama
 function setRatesFromTryBase(rates) {
   Object.entries(currencyTargets).forEach(([code, cfg]) => {
     const el = document.getElementById(cfg.id);
@@ -153,7 +168,6 @@ function setRatesFromTryBase(rates) {
 }
 
 async function fetchRatesPrimary() {
-  // open.er-api
   const url = "https://open.er-api.com/v6/latest/TRY";
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error("Rates HTTP " + res.status);
@@ -166,7 +180,6 @@ async function fetchRatesPrimary() {
 }
 
 async function fetchRatesFallback() {
-  // exchangerate.host
   const url = "https://api.exchangerate.host/latest?base=TRY";
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error("Rates Fallback HTTP " + res.status);
@@ -198,7 +211,6 @@ async function fetchRates() {
 // -----------------------------
 // VIDEO AUTOPLAY GÜVENCESİ
 // -----------------------------
-
 function ensureVideoPlays() {
   const video = document.getElementById("hotel-video");
   if (!video) return;
@@ -214,7 +226,6 @@ function ensureVideoPlays() {
 // -----------------------------
 // 24 SAATTE BİR OTOMATİK YENİLE
 // -----------------------------
-
 function scheduleAutoReload() {
   const ONE_DAY_MS = 24 * 60 * 60 * 1000;
   setTimeout(() => {
@@ -225,8 +236,9 @@ function scheduleAutoReload() {
 // -----------------------------
 // INIT
 // -----------------------------
-
 document.addEventListener("DOMContentLoaded", () => {
+  resizeLayout(); // ilk yüklemede ölçekle
+
   updateLocalDateTime();
   updateWorldClocks();
   fetchWeather();
@@ -236,6 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setInterval(updateLocalDateTime, 1000);
   setInterval(updateWorldClocks, 1000);
-  setInterval(fetchWeather, 10 * 60 * 1000); // 10 dk
-  setInterval(fetchRates, 5 * 60 * 1000);    // 5 dk
+  setInterval(fetchWeather, 10 * 60 * 1000);
+  setInterval(fetchRates, 5 * 60 * 1000);
 });
