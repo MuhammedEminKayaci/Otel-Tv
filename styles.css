@@ -91,11 +91,12 @@ body {
 }
 
 .logo-image {
-  max-height: 45%;            /* Smart TV'de taşmayı önle - daha küçük */
+  max-height: 38%;            /* Daha da küçültülmüş yükseklik */
+  max-width: 16vw;            /* Genişliği sınırlayarak taşmayı engelle */
   height: auto;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.75));
 }
 
 /* Sağ: tarih / saat */
@@ -216,7 +217,7 @@ body {
   letter-spacing: 4px;
   padding-top: 10px;
   font-size: 1.2em;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7); /* siyah gölge */
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.85); /* daha koyu siyah gölge */
 }
 
 .room-list {
@@ -233,6 +234,7 @@ body {
   justify-content: space-between;
   font-size: 1.2em;
   letter-spacing: 1px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8); /* siyah metin gölgesi, beyaz parlamayı kaldırır */
 }
 
 .room-row span:first-child {
@@ -256,7 +258,7 @@ body {
   display: flex;
   flex-direction: row;
   z-index: 10;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.7); /* siyah gölge */
+  box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.85); /* daha koyu siyah gölge */
 }
 
 .rate-item {
@@ -278,12 +280,14 @@ body {
   font-weight: 700;
   font-size: 1.2em;     /* 1.05 → 1.2 */
   color: #000000;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.75); /* siyah gölge */
 }
 
 .rate-value {
   margin-top: 4px;
   font-size: 1.2em;     /* 1.05 → 1.2 */
   color: #000000;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.75); /* siyah gölge */
 }
 
 /* TV modunda genel fontu biraz büyüt */
