@@ -343,24 +343,6 @@ function scheduleAutoReload() {
 }
 
 // -----------------------------
-// 1920x1080 FRAME'İ EKRANA GÖRE ÖLÇEKLE
-// -----------------------------
-function resizeFrame() {
-  var frame = document.getElementById("frame");
-  if (!frame) return;
-
-  var sw = window.innerWidth || document.documentElement.clientWidth;
-  var sh = window.innerHeight || document.documentElement.clientHeight;
-
-  var scale = Math.min(sw / 1920, sh / 1080);
-  frame.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
-}
-
-window.addEventListener("resize", function () {
-  resizeFrame();
-});
-
-// -----------------------------
 // INIT
 // -----------------------------
 document.addEventListener("DOMContentLoaded", function () {
@@ -377,6 +359,4 @@ document.addEventListener("DOMContentLoaded", function () {
   setInterval(updateWorldClocks, 1000);
   setInterval(fetchWeather, 10 * 60 * 1000);
   setInterval(fetchRates, 5 * 60 * 1000);
-
-  resizeFrame();
 });

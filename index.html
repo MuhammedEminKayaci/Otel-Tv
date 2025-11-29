@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Grand Ani Hotel - Lobby Display</title>
 
-  <!-- Tek viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="format-detection" content="telephone=no" />
@@ -21,124 +20,121 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <!-- 1920x1080 sabit frame -->
-  <div id="frame">
-    <div class="layout tv-safe-area">
+  <div class="layout tv-safe-area">
 
-      <!-- ÜST ŞERİT -->
-      <header class="top-bar">
-        <!-- HAVA DURUMU -->
-        <div class="weather-panel">
-          <div class="weather-city">Kars</div>
-          <div class="weather-temp" id="weather-temp">--°</div>
-          <div class="weather-desc" id="weather-desc">Yükleniyor...</div>
+    <!-- ÜST ŞERİT -->
+    <header class="top-bar">
+      <!-- HAVA DURUMU -->
+      <div class="weather-panel">
+        <div class="weather-city">Kars</div>
+        <div class="weather-temp" id="weather-temp">--°</div>
+        <div class="weather-desc" id="weather-desc">Yükleniyor...</div>
+      </div>
+
+      <!-- LOGO -->
+      <div class="logo-panel">
+        <div class="logo-icon">
+          <img
+            src="media/grand-ani-logo.png"
+            alt="Grand Ani Hotel"
+            class="logo-image"
+          />
         </div>
+      </div>
 
-        <!-- LOGO -->
-        <div class="logo-panel">
-          <div class="logo-icon">
-            <img
-              src="media/grand-ani-logo.png"
-              alt="Grand Ani Hotel"
-              class="logo-image"
-            />
+      <!-- TARİH / SAAT -->
+      <div class="datetime-panel">
+        <div class="datetime-date" id="current-date">--</div>
+        <div class="datetime-day" id="current-day">--</div>
+        <div class="datetime-time" id="current-time">--:--:--</div>
+      </div>
+    </header>
+
+    <!-- ORTA ALAN -->
+    <main class="center-area">
+      <!-- SOL: DÜNYA SAATLERİ -->
+      <aside class="world-times">
+        <div class="world-block">
+          <div class="world-times-title">LONDRA</div>
+          <div class="world-time-digits" id="time-london">--:--</div>
+        </div>
+        <div class="world-block">
+          <div class="world-times-title">NEW YORK</div>
+          <div class="world-time-digits" id="time-ny">--:--</div>
+        </div>
+        <div class="world-block">
+          <div class="world-times-title">TOKYO</div>
+          <div class="world-time-digits" id="time-tokyo">--:--</div>
+        </div>
+      </aside>
+
+      <!-- ORTA: VİDEO -->
+      <section class="video-wrapper">
+        <video
+          id="hotel-video"
+          class="video-player"
+          src="media/hotel-video.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+        ></video>
+      </section>
+
+      <!-- SAĞ: ODA FİYATLARI -->
+      <aside class="room-prices">
+        <div class="room-header">
+          <div>ODA</div>
+          <div>FİYATLARI</div>
+        </div>
+        <div class="room-list">
+          <div class="room-row">
+            <span>TEK KİŞİ</span>
+            <span class="price">140€</span>
+          </div>
+          <div class="room-row">
+            <span>İKİ KİŞİ</span>
+            <span class="price">240€</span>
+          </div>
+          <div class="room-row">
+            <span>AİLE</span>
+            <span class="price">300€</span>
+          </div>
+          <div class="room-row">
+            <span>VIP</span>
+            <span class="price">400€</span>
           </div>
         </div>
+      </aside>
+    </main>
 
-        <!-- TARİH / SAAT -->
-        <div class="datetime-panel">
-          <div class="datetime-date" id="current-date">--</div>
-          <div class="datetime-day" id="current-day">--</div>
-          <div class="datetime-time" id="current-time">--:--:--</div>
-        </div>
-      </header>
-
-      <!-- ORTA ALAN -->
-      <main class="center-area">
-        <!-- SOL: DÜNYA SAATLERİ -->
-        <aside class="world-times">
-          <div class="world-block">
-            <div class="world-times-title">LONDRA</div>
-            <div class="world-time-digits" id="time-london">--:--</div>
-          </div>
-          <div class="world-block">
-            <div class="world-times-title">NEW YORK</div>
-            <div class="world-time-digits" id="time-ny">--:--</div>
-          </div>
-          <div class="world-block">
-            <div class="world-times-title">TOKYO</div>
-            <div class="world-time-digits" id="time-tokyo">--:--</div>
-          </div>
-        </aside>
-
-        <!-- ORTA: VİDEO -->
-        <section class="video-wrapper">
-          <video
-            id="hotel-video"
-            class="video-player"
-            src="media/hotel-video.mp4"
-            autoplay
-            muted
-            loop
-            playsinline
-          ></video>
-        </section>
-
-        <!-- SAĞ: ODA FİYATLARI -->
-        <aside class="room-prices">
-          <div class="room-header">
-            <div>ODA</div>
-            <div>FİYATLARI</div>
-          </div>
-          <div class="room-list">
-            <div class="room-row">
-              <span>TEK KİŞİ</span>
-              <span class="price">140€</span>
-            </div>
-            <div class="room-row">
-              <span>İKİ KİŞİ</span>
-              <span class="price">240€</span>
-            </div>
-            <div class="room-row">
-              <span>AİLE</span>
-              <span class="price">300€</span>
-            </div>
-            <div class="room-row">
-              <span>VIP</span>
-              <span class="price">400€</span>
-            </div>
-          </div>
-        </aside>
-      </main>
-
-      <!-- ALT: DÖVİZ ŞERİDİ -->
-      <footer class="rates-bar">
-        <div class="rate-item">
-          <div class="rate-name">Yen</div>
-          <div class="rate-value" id="rate-jpy">--</div>
-        </div>
-        <div class="rate-item">
-          <div class="rate-name">Dolar</div>
-          <div class="rate-value" id="rate-usd">--</div>
-        </div>
-        <div class="rate-item">
-          <div class="rate-name">Euro</div>
-          <div class="rate-value" id="rate-eur">--</div>
-        </div>
-        <div class="rate-item">
-          <div class="rate-name">Frank</div>
-          <div class="rate-value" id="rate-chf">--</div>
-        </div>
-        <div class="rate-item">
-          <div class="rate-name">Rus Rublesi</div>
-          <div class="rate-value" id="rate-rub">--</div>
-        </div>
-        <div class="rate-item">
-          <div class="rate-name">Sterlin</div>
-          <div class="rate-value" id="rate-gbp">--</div>
-        </div>
-      </footer>
-    </div>
+    <!-- ALT: DÖVİZ ŞERİDİ -->
+    <footer class="rates-bar">
+      <div class="rate-item">
+        <div class="rate-name">Yen</div>
+        <div class="rate-value" id="rate-jpy">--</div>
+      </div>
+      <div class="rate-item">
+        <div class="rate-name">Dolar</div>
+        <div class="rate-value" id="rate-usd">--</div>
+      </div>
+      <div class="rate-item">
+        <div class="rate-name">Euro</div>
+        <div class="rate-value" id="rate-eur">--</div>
+      </div>
+      <div class="rate-item">
+        <div class="rate-name">Frank</div>
+        <div class="rate-value" id="rate-chf">--</div>
+      </div>
+      <div class="rate-item">
+        <div class="rate-name">Rus Rublesi</div>
+        <div class="rate-value" id="rate-rub">--</div>
+      </div>
+      <div class="rate-item">
+        <div class="rate-name">Sterlin</div>
+        <div class="rate-value" id="rate-gbp">--</div>
+      </div>
+    </footer>
   </div>
 </body>
 </html>
