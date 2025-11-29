@@ -151,10 +151,21 @@ body {
 /* ORTA ALAN (yaklaşık 78vh) */
 .center-area {
   flex: 1;
+  /* Eski tarayıcılar için FLEX fallback */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+
+  /* Yeni tarayıcılar grid'i destekliyorsa bu satır devreye girer */
   display: grid;
   grid-template-columns: minmax(15vw, 18vw) 1fr minmax(20vw, 23vw);
   background-color: var(--bg-dark);
 }
+
 
 /* SOL: Dünya saatleri */
 .world-times {
