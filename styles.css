@@ -6,45 +6,54 @@
   --accent-gold: #ffc93c;
 }
 
-/* MASRAFSIZ ÇÖZÜM 2 — 4K TV’de boşlukları kaldırma */
+/* GENEL */
 html,
 body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden !important;
   background: #000;
+  overflow: hidden;
 }
 
-/* Her şey ekran dışına taşmasın */
 * {
   box-sizing: border-box;
-  max-width: 100vw !important;
 }
 
-/* GENEL METİN VE YAPI */
 body {
   color: var(--text-main);
   font-family: "Times New Roman", Times, serif;
 }
 
-/* ANA YAPI – TÜM EKRANI KAPLA */
+/* 1920x1080 SABİT FRAME */
+#frame {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 1920px;
+  height: 1080px;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center center;
+  background: #000;
+  overflow: hidden;
+}
+
+/* ANA YAPI */
 .layout {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: #000;
 }
 
-/* Smart TV overscan güvenliği: kenarlarda taşma olmasın */
+/* TV safe area: artık padding yok, birebir tasarım */
 .tv-safe-area {
-  padding: max(1.5vh, env(safe-area-inset-top)) max(1.5vw, env(safe-area-inset-right))
-           max(1.5vh, env(safe-area-inset-bottom)) max(1.5vw, env(safe-area-inset-left));
+  padding: 0;
 }
 
-/* ÜST ŞERİT (yaklaşık 13vh) */
+/* ÜST ŞERİT */
 .top-bar {
   flex: 0 0 13vh;
   background: linear-gradient(
@@ -148,9 +157,10 @@ body {
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
 }
 
-/* ORTA ALAN (yaklaşık 78vh) */
+/* ORTA ALAN */
 .center-area {
   flex: 1;
+
   /* Eski tarayıcılar için FLEX fallback */
   display: -webkit-box;
   display: -ms-flexbox;
@@ -160,12 +170,11 @@ body {
   -ms-flex-direction: row;
   flex-direction: row;
 
-  /* Yeni tarayıcılar grid'i destekliyorsa bu satır devreye girer */
+  /* Grid destekleyenler için gerçek layout */
   display: grid;
   grid-template-columns: minmax(15vw, 18vw) 1fr minmax(20vw, 23vw);
   background-color: var(--bg-dark);
 }
-
 
 /* SOL: Dünya saatleri */
 .world-times {
@@ -207,10 +216,10 @@ body {
   text-shadow: 0 0 14px rgba(0, 0, 0, 0.95);
 }
 
-/* ORTA: Video alanı – alanı TAM doldur */
+/* ORTA: Video alanı */
 .video-wrapper {
   position: relative;
-  padding: 1vh 0.5vw;      /* kenar boşluğu minimize edildi */
+  padding: 1vh 0.5vw;
   display: flex;
   align-items: stretch;
   justify-content: stretch;
@@ -219,7 +228,7 @@ body {
 .video-player {
   width: 100%;
   height: 100%;
-  object-fit: cover;       /* alanı tamamen kaplasın */
+  object-fit: cover;
   border-radius: 0.6rem;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
 }
@@ -235,7 +244,6 @@ body {
 }
 
 .room-header {
-  /* Üstten siyah gölgeyle üst kısımla karışmayı önle */
   background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%), var(--yellow-main);
   color: #1f1300;
   text-align: center;
@@ -267,7 +275,7 @@ body {
   font-weight: 700;
 }
 
-/* ALT DÖVİZ ŞERİDİ (yaklaşık 9vh) */
+/* ALT DÖVİZ ŞERİDİ */
 .rates-bar {
   flex: 0 0 9vh;
   display: grid;
@@ -301,44 +309,14 @@ body {
   color: #000;
 }
 
-/* 4K ve çok büyük ekranlarda daha büyük metin (zoom yerine font artır) */
+/* 4K ve çok büyük ekranlarda gerekiyorsa küçük font tweak'i */
 @media (min-width: 2500px) {
   body {
-    font-size: 28px !important;
+    font-size: 18px;
   }
 }
 
-/* TV algılandığında zoom yerine transform-scale kullan (zoom birçok TV'de yok) */
-.tv-view {
-  font-size: 32px !important;
-}
-
-/* Ölçeklemeyi kökten uygula */
+/* Şimdilik tv-view sadece flag, ekstra scale yok */
 .tv-view .layout {
-  transform: scale(1.08);
-  transform-origin: top left;
-}
-
-/* TV modunda video biraz daha agresif davransın */
-.tv-view .video-wrapper {
-  padding: 0.5vh 0.4vw !important;
-}
-
-.tv-view .video-player {
-  border-radius: 0.4rem;
-}
-
-/* TV modunda önemli alanları ekstra büyüt */
-.tv-view .datetime-date,
-.tv-view .datetime-day {
-  font-size: 1.2em !important;
-}
-
-.tv-view .datetime-time {
-  font-size: 1.6em !important;
-}
-
-.tv-view .rate-name,
-.tv-view .rate-value {
-  font-size: 1.4em !important;
+  transform: none;
 }
