@@ -1,20 +1,19 @@
 // -----------------------------
-// 1920x1080 CANVAS'I EKRANA GÖRE ÖLÇEKLE
+// MASRAFSIZ ÇÖZÜM 1 — TV ALGILAMA
 // -----------------------------
-function resizeLayout() {
-  const designW = 1920;
-  const designH = 1080;
-  const w = window.innerWidth;
-  const h = window.innerHeight;
+function detectTV() {
+  const ua = navigator.userAgent || "";
+  const isTV =
+    ua.includes("TV") ||
+    ua.includes("SmartTV") ||
+    ua.includes("Tizen") ||
+    ua.includes("WebTV") ||
+    screen.width > 2500; // büyük ekran algısı
 
-  const scale = Math.min(w / designW, h / designH);
-  const layout = document.querySelector(".layout");
-  if (!layout) return;
-
-  layout.style.transform = `scale(${scale})`;
+  if (isTV) {
+    document.body.classList.add("tv-view");
+  }
 }
-
-window.addEventListener("resize", resizeLayout);
 
 // -----------------------------
 // ZAMAN / TARİH
@@ -140,7 +139,6 @@ async function fetchWeather() {
 // DÖVİZ KURLARI
 // 1 BİRİM yabancı para = X TL (rakam), ekranda kendi sembolü ile
 // -----------------------------
-
 const currencyTargets = {
   JPY: { id: "rate-jpy", symbol: "¥" },
   USD: { id: "rate-usd", symbol: "$" },
@@ -237,7 +235,7 @@ function scheduleAutoReload() {
 // INIT
 // -----------------------------
 document.addEventListener("DOMContentLoaded", () => {
-  resizeLayout(); // ilk yüklemede ölçekle
+  detectTV();                // önce TV modunu algıla
 
   updateLocalDateTime();
   updateWorldClocks();
