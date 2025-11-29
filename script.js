@@ -1,5 +1,5 @@
 // ==========================
-// ESKİ TV UYUMLU SCRIPT
+// TV UYUMLU BASİT SCRIPT
 // ==========================
 
 if (!window.console) {
@@ -89,34 +89,7 @@ function updateWorldClocks() {
 }
 
 // -------------------------
-// XHR JSON YARDIMCI
-// -------------------------
-function xhrGetJson(url, onSuccess, onError) {
-  try {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          try {
-            var data = JSON.parse(xhr.responseText);
-            onSuccess(data);
-          } catch (e) {
-            if (onError) onError(e);
-          }
-        } else {
-          if (onError) onError(xhr);
-        }
-      }
-    };
-    xhr.send(null);
-  } catch (e) {
-    if (onError) onError(e);
-  }
-}
-
-// -------------------------
-// HAVA DURUMU
+// HAVA DURUMU (Open-Meteo, çalışmazsa "Bağlantı yok")
 // -------------------------
 var KARS_LAT = 40.601;
 var KARS_LON = 43.097;
@@ -144,6 +117,30 @@ var weatherCodeMap = {
   96: "Dolu",
   99: "Kuvvetli dolu"
 };
+
+function xhrGetJson(url, onSuccess, onError) {
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+            onSuccess(data);
+          } catch (e) {
+            if (onError) onError(e);
+          }
+        } else {
+          if (onError) onError(xhr);
+        }
+      }
+    };
+    xhr.send(null);
+  } catch (e) {
+    if (onError) onError(e);
+  }
+}
 
 function fetchWeather() {
   var url =
@@ -184,92 +181,28 @@ function fetchWeather() {
 }
 
 // -------------------------
-// DÖVİZ KURLARI
+// DÖVİZLER – TAMAMEN STATİK
 // -------------------------
-var currencyTargets = {
-  JPY: { id: "rate-jpy", symbol: "¥" },
-  USD: { id: "rate-usd", symbol: "$" },
-  EUR: { id: "rate-eur", symbol: "€" },
-  CHF: { id: "rate-chf", symbol: "Fr" },
-  RUB: { id: "rate-rub", symbol: "₽" },
-  GBP: { id: "rate-gbp", symbol: "£" }
-};
-
-// TV internete çıkamasa bile ekranda sayı olsun diye sabit fallback
-function setStaticFallbackRates() {
+function initStaticRates() {
   var el;
-  el = document.getElementById("rate-jpy"); if (el) el.innerHTML = "0.27¥";
-  el = document.getElementById("rate-usd"); if (el) el.innerHTML = "42.50$";
-  el = document.getElementById("rate-eur"); if (el) el.innerHTML = "49.28€";
-  el = document.getElementById("rate-chf"); if (el) el.innerHTML = "52.85Fr";
-  el = document.getElementById("rate-rub"); if (el) el.innerHTML = "0.54₽";
-  el = document.getElementById("rate-gbp"); if (el) el.innerHTML = "50.90£";
-}
 
-function setRatesFromTryBase(rates) {
-  for (var code in currencyTargets) {
-    if (!currencyTargets.hasOwnProperty(code)) continue;
-    var cfg = currencyTargets[code];
-    var el = document.getElementById(cfg.id);
-    if (!el) continue;
+  el = document.getElementById("rate-jpy");
+  if (el) el.innerHTML = "0.27¥";
 
-    var r = rates[code];
-    if (!r || typeof r !== "number") {
-      el.innerHTML = "--";
-      continue;
-    }
-    var tlPerUnit = 1 / r;
-    el.innerHTML = tlPerUnit.toFixed(2) + cfg.symbol;
-  }
-}
+  el = document.getElementById("rate-usd");
+  if (el) el.innerHTML = "42.50$";
 
-function fetchRatesPrimary(onDone) {
-  var url = "https://open.er-api.com/v6/latest/TRY";
-  xhrGetJson(
-    url,
-    function (data) {
-      if (data && data.rates) {
-        setRatesFromTryBase(data.rates);
-        if (onDone) onDone(true);
-      } else {
-        if (onDone) onDone(false);
-      }
-    },
-    function () {
-      if (onDone) onDone(false);
-    }
-  );
-}
+  el = document.getElementById("rate-eur");
+  if (el) el.innerHTML = "49.28€";
 
-function fetchRatesFallback(onDone) {
-  var url = "https://api.exchangerate.host/latest?base=TRY";
-  xhrGetJson(
-    url,
-    function (data) {
-      if (data && data.rates) {
-        setRatesFromTryBase(data.rates);
-        if (onDone) onDone(true);
-      } else {
-        if (onDone) onDone(false);
-      }
-    },
-    function () {
-      if (onDone) onDone(false);
-    }
-  );
-}
+  el = document.getElementById("rate-chf");
+  if (el) el.innerHTML = "52.85Fr";
 
-function fetchRates() {
-  fetchRatesPrimary(function (ok) {
-    if (!ok) {
-      fetchRatesFallback(function (ok2) {
-        if (!ok2) {
-          // İkisi de çalışmazsa sabit değerleri yaz
-          setStaticFallbackRates();
-        }
-      });
-    }
-  });
+  el = document.getElementById("rate-rub");
+  if (el) el.innerHTML = "0.54₽";
+
+  el = document.getElementById("rate-gbp");
+  if (el) el.innerHTML = "50.90£";
 }
 
 // -------------------------
@@ -319,12 +252,11 @@ document.addEventListener("DOMContentLoaded", function () {
   updateLocalDateTime();
   updateWorldClocks();
   fetchWeather();
-  fetchRates();          // çalışmazsa bile fallback yazar
+  initStaticRates();     // → her zaman değerleri yazar
   ensureVideoPlays();
   scheduleAutoReload();
 
   setInterval(updateLocalDateTime, 1000);
   setInterval(updateWorldClocks, 1000);
   setInterval(fetchWeather, 10 * 60 * 1000);
-  setInterval(fetchRates, 5 * 60 * 1000);
 });
