@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
   updateLocalDateTime();
   updateWorldClocks();
   fetchWeather();
-  initStaticRates();     // → her zaman değerleri yazar
+  initStaticRates();   // her zaman değerleri yazar
   ensureVideoPlays();
   scheduleAutoReload();
 
