@@ -181,28 +181,97 @@ function fetchWeather() {
 }
 
 // -------------------------
-// DÖVİZLER – TAMAMEN STATİK
+// DÖVİZLER – DİNAMİK (5 dk) + Statik yedek
 // -------------------------
+var rubleSymbol = "₽"; // varsayılan
+
+function ensureRubleSymbol() {
+  try {
+    var test = document.createElement("span");
+    test.style.position = "absolute";
+    test.style.opacity = "0";
+    test.innerHTML = rubleSymbol;
+    document.body.appendChild(test);
+    // Eğer genişlik yoksa veya font fallback başarısızsa sembolü kod ile değiştir
+    if (!test.offsetWidth || test.offsetWidth < 4) {
+      rubleSymbol = " RUB"; // fallback
+    }
+    document.body.removeChild(test);
+  } catch (e) {
+    rubleSymbol = " RUB";
+  }
+}
+
 function initStaticRates() {
-  var el;
+  setRateValue("rate-jpy", 0.27, "¥");
+  setRateValue("rate-usd", 42.50, "$");
+  setRateValue("rate-eur", 49.28, "€");
+  setRateValue("rate-chf", 52.85, "Fr");
+  setRateValue("rate-rub", 0.54, rubleSymbol);
+  setRateValue("rate-gbp", 50.90, "£");
+}
 
-  el = document.getElementById("rate-jpy");
-  if (el) el.innerHTML = "0.27¥";
+function setRateValue(id, value, symbol) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = value.toFixed(2) + symbol;
+}
 
-  el = document.getElementById("rate-usd");
-  if (el) el.innerHTML = "42.50$";
+function fetchRatesPrimary(onDone, onFail) {
+  xhrGetJson("https://open.er-api.com/v6/latest/TRY", function (data) {
+    if (data && data.rates) onDone(data.rates); else onFail();
+  }, onFail);
+}
 
-  el = document.getElementById("rate-eur");
-  if (el) el.innerHTML = "49.28€";
+function fetchRatesFallback(onDone, onFail) {
+  xhrGetJson("https://api.exchangerate.host/latest?base=TRY", function (data) {
+    if (data && data.rates) onDone(data.rates); else onFail();
+  }, onFail);
+}
 
-  el = document.getElementById("rate-chf");
-  if (el) el.innerHTML = "52.85Fr";
+function applyRates(rates) {
+  if (!rates) return;
+  // 1 TRY = r CODE => 1 CODE = 1/r TRY
+  updateRate("JPY", "rate-jpy", rates);
+  updateRate("USD", "rate-usd", rates);
+  updateRate("EUR", "rate-eur", rates);
+  updateRate("CHF", "rate-chf", rates);
+  updateRate("RUB", "rate-rub", rates, rubleSymbol);
+  updateRate("GBP", "rate-gbp", rates);
+}
 
-  el = document.getElementById("rate-rub");
-  if (el) el.innerHTML = "0.54₽";
+function updateRate(code, id, rates, customSymbol) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var r = rates[code];
+  if (typeof r !== "number") {
+    el.innerHTML = "--";
+    return;
+  }
+  var tlPerUnit = 1 / r;
+  var symbol;
+  switch (code) {
+    case "JPY": symbol = "¥"; break;
+    case "USD": symbol = "$"; break;
+    case "EUR": symbol = "€"; break;
+    case "CHF": symbol = "Fr"; break;
+    case "RUB": symbol = customSymbol || rubleSymbol; break;
+    case "GBP": symbol = "£"; break;
+    default: symbol = code;
+  }
+  el.innerHTML = tlPerUnit.toFixed(2) + symbol;
+}
 
-  el = document.getElementById("rate-gbp");
-  if (el) el.innerHTML = "50.90£";
+function fetchRatesDynamic() {
+  fetchRatesPrimary(
+    function (rates) { applyRates(rates); },
+    function () {
+      fetchRatesFallback(
+        function (rates) { applyRates(rates); },
+        function () { initStaticRates(); }
+      );
+    }
+  );
 }
 
 // -------------------------
@@ -248,15 +317,17 @@ function scheduleAutoReload() {
 // -------------------------
 document.addEventListener("DOMContentLoaded", function () {
   detectTV();
+  ensureRubleSymbol();
 
   updateLocalDateTime();
   updateWorldClocks();
   fetchWeather();
-  initStaticRates();   // her zaman değerleri yazar
+  fetchRatesDynamic(); // canlı kurlar
   ensureVideoPlays();
   scheduleAutoReload();
 
   setInterval(updateLocalDateTime, 1000);
   setInterval(updateWorldClocks, 1000);
   setInterval(fetchWeather, 10 * 60 * 1000);
+  setInterval(fetchRatesDynamic, 5 * 60 * 1000); // 5 dakikada bir güncelle
 });

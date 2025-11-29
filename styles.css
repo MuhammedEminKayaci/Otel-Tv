@@ -183,8 +183,8 @@ body {
 }
 
 .video-player {
-  width: 110%;
-  height: 105%;
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
   object-fit: cover;
   box-shadow: 0 0 26px rgba(0, 0, 0, 0.9); /* siyah gölge */
@@ -210,7 +210,8 @@ body {
 /* Başlık sarı blok + hafif aşağı gölge */
 .room-header {
   height: 22%;
-  background: linear-gradient(180deg, #ffe16e 0%, #f6c600 60%, #e5b800 100%);
+  /* Hafif siyahtan sarıya geçiş */
+  background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, #f6c600 55%, #e5b800 100%);
   color: #1f1300;
   text-align: center;
   font-weight: 700;
@@ -253,7 +254,8 @@ body {
   bottom: 0;
   width: 100%;
   height: 15%;
-  background: linear-gradient(0deg, #e0b000 0%, #f6c600 45%, #ffe16e 100%);
+  /* Hafif siyahtan sarıya geçiş */
+  background: linear-gradient(0deg, rgba(0,0,0,0.45) 0%, #f6c600 45%, #ffe16e 100%);
   border-top: 2px solid #1c1200;
   display: flex;
   flex-direction: row;
@@ -281,6 +283,7 @@ body {
   font-size: 1.2em;     /* 1.05 → 1.2 */
   color: #000000;
   text-shadow: 0 2px 8px rgba(0,0,0,0.75); /* siyah gölge */
+  font-family: "Segoe UI","Arial Unicode MS","Arial","Helvetica","sans-serif";
 }
 
 .rate-value {
@@ -288,6 +291,7 @@ body {
   font-size: 1.2em;     /* 1.05 → 1.2 */
   color: #000000;
   text-shadow: 0 2px 8px rgba(0,0,0,0.75); /* siyah gölge */
+  font-family: "Segoe UI","Arial Unicode MS","Arial","Helvetica","sans-serif";
 }
 
 /* TV modunda genel fontu biraz büyüt */
