@@ -38,6 +38,12 @@ body {
   background-color: #000;
 }
 
+/* Smart TV overscan güvenliği: kenarlarda taşma olmasın */
+.tv-safe-area {
+  padding: max(1.5vh, env(safe-area-inset-top)) max(1.5vw, env(safe-area-inset-right))
+           max(1.5vh, env(safe-area-inset-bottom)) max(1.5vw, env(safe-area-inset-left));
+}
+
 /* ÜST ŞERİT (yaklaşık 13vh) */
 .top-bar {
   flex: 0 0 13vh;
@@ -104,7 +110,7 @@ body {
 }
 
 .logo-image {
-  max-height: 10vh;
+  max-height: 20vh;
   height: auto;
   width: auto;
   object-fit: contain;
@@ -218,13 +224,15 @@ body {
 }
 
 .room-header {
-  background-color: var(--yellow-main);
+  /* Üstten siyah gölgeyle üst kısımla karışmayı önle */
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%), var(--yellow-main);
   color: #1f1300;
   text-align: center;
   font-weight: 700;
   letter-spacing: 0.12em;
   padding: 2vh 1vw;
   font-size: clamp(1.6rem, 2vw, 2.3rem);
+  box-shadow: 0 -12px 22px rgba(0,0,0,0.55) inset, 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .room-list {
@@ -282,18 +290,22 @@ body {
   color: #000;
 }
 
-/* MASRAFSIZ ÇÖZÜM 3 — 4K ve çok büyük ekranlarda otomatik büyütme */
+/* 4K ve çok büyük ekranlarda daha büyük metin (zoom yerine font artır) */
 @media (min-width: 2500px) {
   body {
     font-size: 28px !important;
-    zoom: 1.3 !important;
   }
 }
 
-/* MASRAFSIZ ÇÖZÜM 1 — TV algılandığında ek büyütme ve video optimizasyonu */
+/* TV algılandığında zoom yerine transform-scale kullan (zoom birçok TV'de yok) */
 .tv-view {
-  zoom: 1.2 !important;          /* tüm yapıyı %20 büyüt */
-  font-size: 32px !important;    /* temel fontu büyüt */
+  font-size: 32px !important;
+}
+
+/* Ölçeklemeyi kökten uygula */
+.tv-view .layout {
+  transform: scale(1.08);
+  transform-origin: top left;
 }
 
 /* TV modunda video biraz daha agresif davransın */

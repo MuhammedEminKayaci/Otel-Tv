@@ -4,11 +4,8 @@
 function detectTV() {
   const ua = navigator.userAgent || "";
   const isTV =
-    ua.includes("TV") ||
-    ua.includes("SmartTV") ||
-    ua.includes("Tizen") ||
-    ua.includes("WebTV") ||
-    screen.width > 2500; // büyük ekran algısı
+    /TV|SmartTV|Tizen|WebTV|WebOS|NetCast|NetTV|HbbTV|VIDAA|Hisense|PhilipsTV|Opera TV|Vewd/i.test(ua) ||
+    screen.width >= 2500; // büyük ekran algısı
 
   if (isTV) {
     document.body.classList.add("tv-view");
@@ -213,6 +210,10 @@ function ensureVideoPlays() {
   const video = document.getElementById("hotel-video");
   if (!video) return;
 
+  // Bazı TV tarayıcıları autoplay için muted flag'ini gerektirir
+  video.muted = true;
+  video.setAttribute("playsinline", "");
+
   const playPromise = video.play();
   if (playPromise !== undefined) {
     playPromise.catch(() => {
@@ -220,6 +221,15 @@ function ensureVideoPlays() {
     });
   }
 }
+
+// Uzaktan kumanda uyumu için basit ok tuşu desteği (opsiyonel)
+document.addEventListener("keydown", (e) => {
+  // Bazı TV'ler PageUp/PageDown, ok tuşlarıyla sayfayı kaydırır; engelle
+  const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "PageUp", "PageDown"];
+  if (keys.includes(e.key)) {
+    e.preventDefault();
+  }
+});
 
 // -----------------------------
 // 24 SAATTE BİR OTOMATİK YENİLE
