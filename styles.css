@@ -142,8 +142,8 @@ body {
 
 .world-block {
   width: 100%;
-  height: 18%;  /* Yükseklik artırıldı */
-  margin-bottom: 2.8%;  /* Boşluk artırıldı */
+  height: 15%;  /* 6 şehir için azaltıldı */
+  margin-bottom: 1.8%;  /* Boşluk azaltıldı */
   background: radial-gradient(circle at 20% 0, #222222, #111111 70%);
   border-radius: 14px;
   border: 1px solid rgba(212, 175, 55, 0.7);
@@ -159,15 +159,15 @@ body {
 }
 
 .world-times-title {
-  font-size: 1.3em;  /* Büyütüldü */
+  font-size: 1.15em;  /* 6 şehir için hafif küçültüldü */
   letter-spacing: 3px;
-  margin-bottom: 5px;  /* Boşluk artırıldı */
+  margin-bottom: 4px;
   text-shadow: 0 2px 10px rgba(0,0,0,0.8); /* siyah gölge, modern */
 }
 
 .world-time-digits {
   font-family: "Share Tech Mono", "Consolas", "Courier New", monospace;
-  font-size: 1.9em;  /* Büyütüldü */
+  font-size: 1.7em;  /* 6 şehir için hafif küçültüldü */
   letter-spacing: 3px;
   text-shadow: 0 2px 12px rgba(0,0,0,0.85);
 }

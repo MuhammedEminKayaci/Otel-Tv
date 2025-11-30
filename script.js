@@ -80,18 +80,21 @@ function updateWorldClocks() {
   var tokyo  = new Date(utcMs + 9 * 3600000);   // UTC+9
   var dubai  = new Date(utcMs + 4 * 3600000);   // UTC+4
   var mecca  = new Date(utcMs + 3 * 3600000);   // UTC+3
+  var beijing = new Date(utcMs + 8 * 3600000);  // UTC+8
 
   var elLon = document.getElementById("time-london");
   var elNy  = document.getElementById("time-ny");
   var elTk  = document.getElementById("time-tokyo");
   var elDubai = document.getElementById("time-dubai");
   var elMecca = document.getElementById("time-mecca");
+  var elBeijing = document.getElementById("time-beijing");
 
   if (elLon) elLon.innerHTML = formatHM(london);
   if (elNy)  elNy.innerHTML  = formatHM(newyork);
   if (elTk)  elTk.innerHTML  = formatHM(tokyo);
   if (elDubai) elDubai.innerHTML = formatHM(dubai);
   if (elMecca) elMecca.innerHTML = formatHM(mecca);
+  if (elBeijing) elBeijing.innerHTML = formatHM(beijing);
 }
 
 // -------------------------
