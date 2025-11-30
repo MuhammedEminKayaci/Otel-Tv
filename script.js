@@ -193,7 +193,7 @@ function fetchWeather() {
 // DÖVİZLER – DİNAMİK (5 dk) + Statik yedek
 // -------------------------
 var rubleSymbol = "₽"; // varsayılan
-var manatSymbol = "₼"; // varsayılan
+var yuanSymbol = "¥"; // varsayılan (Çin Yuanı)
 
 function ensureRubleSymbol() {
   try {
@@ -212,21 +212,21 @@ function ensureRubleSymbol() {
   }
 }
 
-function ensureManatSymbol() {
+function ensureYuanSymbol() {
   try {
     var test = document.createElement("span");
     test.style.position = "absolute";
     test.style.opacity = "0";
     test.style.fontFamily = "Segoe UI, Arial Unicode MS, Arial, sans-serif";
-    test.innerHTML = manatSymbol;
+    test.innerHTML = yuanSymbol;
     document.body.appendChild(test);
     // Eğer genişlik yoksa veya font fallback başarısızsa sembolü kod ile değiştir
     if (!test.offsetWidth || test.offsetWidth < 4) {
-      manatSymbol = " AZN"; // fallback
+      yuanSymbol = " CNY"; // fallback
     }
     document.body.removeChild(test);
   } catch (e) {
-    manatSymbol = " AZN";
+    yuanSymbol = " CNY";
   }
 }
 
@@ -235,7 +235,7 @@ function initStaticRates() {
   setRateValue("rate-eur", 37.28, "€");
   setRateValue("rate-gbp", 43.90, "£");
   setRateValue("rate-chf", 38.85, "Fr");
-  setRateValue("rate-azn", 20.30, manatSymbol);
+  setRateValue("rate-cny", 4.80, yuanSymbol);
 }
 
 function setRateValue(id, value, symbol) {
@@ -263,7 +263,7 @@ function applyRates(rates) {
   updateRate("EUR", "rate-eur", rates);
   updateRate("GBP", "rate-gbp", rates);
   updateRate("CHF", "rate-chf", rates);
-  updateRate("AZN", "rate-azn", rates, manatSymbol);
+  updateRate("CNY", "rate-cny", rates, yuanSymbol);
 }
 
 function updateRate(code, id, rates, customSymbol) {
@@ -281,7 +281,7 @@ function updateRate(code, id, rates, customSymbol) {
     case "EUR": symbol = "€"; break;
     case "GBP": symbol = "£"; break;
     case "CHF": symbol = "Fr"; break;
-    case "AZN": symbol = customSymbol || manatSymbol; break;
+    case "CNY": symbol = customSymbol || yuanSymbol; break;
     default: symbol = code;
   }
   el.innerHTML = tlPerUnit.toFixed(2) + symbol;
@@ -358,7 +358,7 @@ function scheduleAutoReload() {
 document.addEventListener("DOMContentLoaded", function () {
   detectTV();
   ensureRubleSymbol();
-  ensureManatSymbol();
+  ensureYuanSymbol();
 
   updateLocalDateTime();
   updateWorldClocks();
