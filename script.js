@@ -190,6 +190,7 @@ function fetchWeather() {
 // DÖVİZLER – DİNAMİK (5 dk) + Statik yedek
 // -------------------------
 var rubleSymbol = "₽"; // varsayılan
+var manatSymbol = "₼"; // varsayılan
 
 function ensureRubleSymbol() {
   try {
@@ -208,12 +209,30 @@ function ensureRubleSymbol() {
   }
 }
 
+function ensureManatSymbol() {
+  try {
+    var test = document.createElement("span");
+    test.style.position = "absolute";
+    test.style.opacity = "0";
+    test.style.fontFamily = "Segoe UI, Arial Unicode MS, Arial, sans-serif";
+    test.innerHTML = manatSymbol;
+    document.body.appendChild(test);
+    // Eğer genişlik yoksa veya font fallback başarısızsa sembolü kod ile değiştir
+    if (!test.offsetWidth || test.offsetWidth < 4) {
+      manatSymbol = " AZN"; // fallback
+    }
+    document.body.removeChild(test);
+  } catch (e) {
+    manatSymbol = " AZN";
+  }
+}
+
 function initStaticRates() {
   setRateValue("rate-usd", 34.50, "$");
   setRateValue("rate-eur", 37.28, "€");
   setRateValue("rate-gbp", 43.90, "£");
   setRateValue("rate-chf", 38.85, "Fr");
-  setRateValue("rate-azn", 20.30, "₼");
+  setRateValue("rate-azn", 20.30, manatSymbol);
 }
 
 function setRateValue(id, value, symbol) {
@@ -241,7 +260,7 @@ function applyRates(rates) {
   updateRate("EUR", "rate-eur", rates);
   updateRate("GBP", "rate-gbp", rates);
   updateRate("CHF", "rate-chf", rates);
-  updateRate("AZN", "rate-azn", rates);
+  updateRate("AZN", "rate-azn", rates, manatSymbol);
 }
 
 function updateRate(code, id, rates, customSymbol) {
@@ -259,7 +278,7 @@ function updateRate(code, id, rates, customSymbol) {
     case "EUR": symbol = "€"; break;
     case "GBP": symbol = "£"; break;
     case "CHF": symbol = "Fr"; break;
-    case "AZN": symbol = "₼"; break;
+    case "AZN": symbol = customSymbol || manatSymbol; break;
     default: symbol = code;
   }
   el.innerHTML = tlPerUnit.toFixed(2) + symbol;
@@ -336,6 +355,7 @@ function scheduleAutoReload() {
 document.addEventListener("DOMContentLoaded", function () {
   detectTV();
   ensureRubleSymbol();
+  ensureManatSymbol();
 
   updateLocalDateTime();
   updateWorldClocks();
