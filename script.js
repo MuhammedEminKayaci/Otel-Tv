@@ -278,20 +278,35 @@ function fetchRatesDynamic() {
 }
 
 // -------------------------
-// VIDEO AUTOPLAY
+// VIDEO AUTOPLAY + PERFORMANS OPTİMİZASYONU
 // -------------------------
 function ensureVideoPlays() {
   var video = document.getElementById("hotel-video");
   if (!video) return;
 
   try {
+    // Smart TV optimizasyonları
     video.muted = true;
     video.setAttribute("playsinline", "");
-    var playPromise = video.play && video.play();
-    if (playPromise && playPromise.catch) {
-      playPromise.catch(function () {
-        setTimeout(ensureVideoPlays, 3000);
+    video.setAttribute("webkit-playsinline", "");
+    
+    // Donanım hızlandırma için ipucu
+    video.style.transform = "translateZ(0)";
+    video.style.webkitTransform = "translateZ(0)";
+    
+    // Video yüklenene kadar bekle
+    if (video.readyState < 3) {
+      video.addEventListener("canplay", function onCanPlay() {
+        video.removeEventListener("canplay", onCanPlay);
+        video.play();
       });
+    } else {
+      var playPromise = video.play && video.play();
+      if (playPromise && playPromise.catch) {
+        playPromise.catch(function () {
+          setTimeout(ensureVideoPlays, 3000);
+        });
+      }
     }
   } catch (e) {}
 }
