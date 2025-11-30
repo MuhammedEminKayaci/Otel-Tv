@@ -35,7 +35,7 @@ body {
   top: 0;
   width: 100%;
   height: 18%;
-  background: linear-gradient(90deg, #f6c600, #d6a900, #f6c600);
+  background: linear-gradient(90deg, #d4af37, #c5a028, #d4af37);
   color: #2b1700;
   padding: 1.5% 3%;
   display: flex;
@@ -107,18 +107,19 @@ body {
 }
 
 .datetime-date {
-  font-size: 1.3em;
+  font-size: 1.6em;  /* Büyütüldü */
   font-weight: 700;
 }
 
 .datetime-day {
-  font-size: 1.2em;
+  font-size: 1.7em;  /* Büyütüldü */
   margin-top: 4px;
+  font-weight: 700;
 }
 
 .datetime-time {
-  font-size: 1.8em;
-  margin-top: 8px;
+  font-size: 2.3em;  /* Büyütüldü */
+  margin-top: 3px;
   font-weight: 700;
 }
 
@@ -141,11 +142,11 @@ body {
 
 .world-block {
   width: 100%;
-  height: 30%;
-  margin-bottom: 5%;
+  height: 18%;  /* Yükseklik artırıldı */
+  margin-bottom: 2.8%;  /* Boşluk artırıldı */
   background: radial-gradient(circle at 20% 0, #222222, #111111 70%);
   border-radius: 14px;
-  border: 1px solid rgba(255, 215, 0, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.7);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -158,16 +159,16 @@ body {
 }
 
 .world-times-title {
-  font-size: 1.2em;
-  letter-spacing: 4px;
-  margin-bottom: 4px;
+  font-size: 1.3em;  /* Büyütüldü */
+  letter-spacing: 3px;
+  margin-bottom: 5px;  /* Boşluk artırıldı */
   text-shadow: 0 2px 10px rgba(0,0,0,0.8); /* siyah gölge, modern */
 }
 
 .world-time-digits {
   font-family: "Share Tech Mono", "Consolas", "Courier New", monospace;
-  font-size: 1.7em;
-  letter-spacing: 4px;
+  font-size: 1.9em;  /* Büyütüldü */
+  letter-spacing: 3px;
   text-shadow: 0 2px 12px rgba(0,0,0,0.85);
 }
 
@@ -209,20 +210,23 @@ body {
 
 /* Başlık sarı blok + hafif aşağı gölge */
 .room-header {
-  height: 22%;
-  /* Hafif siyahtan sarıya geçiş */
-  background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, #f6c600 55%, #e5b800 100%);
+  height: 18%;  /* Tek satır için azaltıldı */
+  /* Hafif siyahtan açık gold'a geçiş */
+  background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, #d4af37 55%, #c5a028 100%);
   color: #1f1300;
   text-align: center;
   font-weight: 700;
   letter-spacing: 4px;
-  padding-top: 10px;
-  font-size: 1.2em;
+  padding: 0;
+  font-size: 1.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.85); /* daha koyu siyah gölge */
 }
 
 .room-list {
-  height: 78%;
+  height: 82%;  /* Kalan alan */
   padding: 6% 8%;
   display: flex;
   flex-direction: column;
@@ -254,13 +258,13 @@ body {
   bottom: 0;
   width: 100%;
   height: 15%;
-  /* Hafif siyahtan sarıya geçiş */
-  background: linear-gradient(0deg, rgba(0,0,0,0.45) 0%, #f6c600 45%, #ffe16e 100%);
+  /* Hafif siyahtan açık gold'a geçiş */
+  background: linear-gradient(0deg, rgba(0,0,0,0.15) 0%, #d4af37 45%, #f0e68c 100%);
   border-top: 2px solid #1c1200;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   z-index: 10;
-  box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.85); /* daha koyu siyah gölge */
+  box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.25); /* daha koyu siyah gölge */
 }
 
 .rate-item {
@@ -279,18 +283,16 @@ body {
 
 /* Döviz yazıları bir tık büyütüldü */
 .rate-name {
-  font-weight: 700;
-  font-size: 1.2em;     /* 1.05 → 1.2 */
+  font-weight: 800;
+  font-size: 1.5em;     /* 1.05 → 1.2 */
   color: #000000;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.75); /* siyah gölge */
   font-family: "Segoe UI","Arial Unicode MS","Arial","Helvetica","sans-serif";
 }
 
 .rate-value {
-  margin-top: 4px;
-  font-size: 1.2em;     /* 1.05 → 1.2 */
+  margin-top: 2px;
+  font-size: 1.5em;     /* 1.05 → 1.2 */
   color: #000000;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.75); /* siyah gölge */
   font-family: "Segoe UI","Arial Unicode MS","Arial","Helvetica","sans-serif";
 }
 

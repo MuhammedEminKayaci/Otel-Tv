@@ -78,14 +78,20 @@ function updateWorldClocks() {
   var london = new Date(utcMs + 0 * 3600000);   // UTC
   var newyork = new Date(utcMs - 5 * 3600000);  // UTC-5
   var tokyo  = new Date(utcMs + 9 * 3600000);   // UTC+9
+  var dubai  = new Date(utcMs + 4 * 3600000);   // UTC+4
+  var mecca  = new Date(utcMs + 3 * 3600000);   // UTC+3
 
   var elLon = document.getElementById("time-london");
   var elNy  = document.getElementById("time-ny");
   var elTk  = document.getElementById("time-tokyo");
+  var elDubai = document.getElementById("time-dubai");
+  var elMecca = document.getElementById("time-mecca");
 
   if (elLon) elLon.innerHTML = formatHM(london);
   if (elNy)  elNy.innerHTML  = formatHM(newyork);
   if (elTk)  elTk.innerHTML  = formatHM(tokyo);
+  if (elDubai) elDubai.innerHTML = formatHM(dubai);
+  if (elMecca) elMecca.innerHTML = formatHM(mecca);
 }
 
 // -------------------------
@@ -203,12 +209,11 @@ function ensureRubleSymbol() {
 }
 
 function initStaticRates() {
-  setRateValue("rate-jpy", 0.27, "¥");
-  setRateValue("rate-usd", 42.50, "$");
-  setRateValue("rate-eur", 49.28, "€");
-  setRateValue("rate-chf", 52.85, "Fr");
-  setRateValue("rate-rub", 0.54, rubleSymbol);
-  setRateValue("rate-gbp", 50.90, "£");
+  setRateValue("rate-usd", 34.50, "$");
+  setRateValue("rate-eur", 37.28, "€");
+  setRateValue("rate-gbp", 43.90, "£");
+  setRateValue("rate-chf", 38.85, "Fr");
+  setRateValue("rate-azn", 20.30, "₼");
 }
 
 function setRateValue(id, value, symbol) {
@@ -232,12 +237,11 @@ function fetchRatesFallback(onDone, onFail) {
 function applyRates(rates) {
   if (!rates) return;
   // 1 TRY = r CODE => 1 CODE = 1/r TRY
-  updateRate("JPY", "rate-jpy", rates);
   updateRate("USD", "rate-usd", rates);
   updateRate("EUR", "rate-eur", rates);
-  updateRate("CHF", "rate-chf", rates);
-  updateRate("RUB", "rate-rub", rates, rubleSymbol);
   updateRate("GBP", "rate-gbp", rates);
+  updateRate("CHF", "rate-chf", rates);
+  updateRate("AZN", "rate-azn", rates);
 }
 
 function updateRate(code, id, rates, customSymbol) {
@@ -251,12 +255,11 @@ function updateRate(code, id, rates, customSymbol) {
   var tlPerUnit = 1 / r;
   var symbol;
   switch (code) {
-    case "JPY": symbol = "¥"; break;
     case "USD": symbol = "$"; break;
     case "EUR": symbol = "€"; break;
-    case "CHF": symbol = "Fr"; break;
-    case "RUB": symbol = "₽"; break;
     case "GBP": symbol = "£"; break;
+    case "CHF": symbol = "Fr"; break;
+    case "AZN": symbol = "₼"; break;
     default: symbol = code;
   }
   el.innerHTML = tlPerUnit.toFixed(2) + symbol;
